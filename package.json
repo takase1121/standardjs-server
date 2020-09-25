@@ -1,0 +1,31 @@
+{
+  "name": "standardjs-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "standardjs-server": "./src/main.js"
+  },
+  "bugs": {
+    "url": "http://example.com"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "^7.9.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-jsx": "^8.1.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.21.2",
+    "eslint-plugin-standard": "^4.0.1",
+    "mri": "^1.1.6",
+    "polka": "^0.5.2",
+    "standard-engine": "^12.1.0"
+  }
+}
