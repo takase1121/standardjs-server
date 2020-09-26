@@ -15,14 +15,14 @@
 There really isn't anything special going under the hood.
 
 ### Endpoints
-> ##### `GET /lintGlob?cwd=CWD&file=GLOB`
+> #### `GET /lintGlob?cwd=CWD&file=GLOB`
 >
-> - `cwd` is the current working directory as required by `standard-engine`
+> - `cwd` is the current working directory as required by [`standard-engine`](https://github.com/standard/standard-engine)
 > - `file` is the glob to find files, or just a path to file
 
 > #### `POST /lintText?cwd=CWD&file=GLOB`
 >
-> - `cwd` is the current working directory as required by standard-engine
+> - `cwd` is the current working directory as required by [`standard-engine`](https://github.com/standard/standard-engine)
 > - `file` is the filename of the text being linted
 >
 > The body of the request is the text being linted in UTF-8
