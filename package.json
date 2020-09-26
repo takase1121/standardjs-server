@@ -1,19 +1,23 @@
 {
   "name": "standardjs-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "A server for standard and nothing more",
   "main": "src/main.js",
-  "scripts": {
-    "run": "node src/main",
-    "lint": "standard src/*.js"
-  },
   "bin": {
     "standardjs-server": "./src/main.js"
+  },
+  "scripts": {
+    "start": "node src/main",
+    "lint": "standard src/*.js"
   },
   "bugs": {
     "url": "https://github.com/takase1121/standardjs-server/issues"
   },
-  "keywords": [],
+  "homepage": "https://github.com/takase1121/standardjs-server",
+  "keywords": [
+    "standard", "linter", "javascript",
+    "eslint", "development", "static-code-analysis"
+  ],
   "author": "takase1121",
   "license": "ISC",
   "dependencies": {
