@@ -1,6 +1,6 @@
 {
   "name": "standardjs-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A server for standard and nothing more",
   "main": "src/main.js",
   "bin": {
@@ -15,8 +15,12 @@
   },
   "homepage": "https://github.com/takase1121/standardjs-server",
   "keywords": [
-    "standard", "linter", "javascript",
-    "eslint", "development", "static-code-analysis"
+    "standard",
+    "linter",
+    "javascript",
+    "eslint",
+    "development",
+    "static-code-analysis"
   ],
   "author": "takase1121",
   "license": "ISC",
