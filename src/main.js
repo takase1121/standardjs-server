@@ -1,52 +1,58 @@
-const Linter = require('standard-engine').linter
-const mri = require('mri')
 const polka = require('polka')
+let { port, token, debug: debugEnabled } = require('./args')
+const { lintGlob, lintText } = require('./linter')
+const { collectData } = require('./util')
+const debug = (...args) => debugEnabled && console.log(...args)
 
-const opts = require('./options')
-const linter = new Linter(opts)
+const formatOut = filePath => ({ line, column, message }) => `${filePath}:${line}:${column}: ${message}\n`
+const hasParams = url => url.searchParams.has('cwd') && url.searchParams.has('file')
+const sendLint = (res, results) =>
+  results.reduce(
+    (output, item) => [...output, ...item.messages.map(formatOut(item.filePath))],
+    []
+  ).forEach(message => res.write(message))
 
-const args = mri(process.argv.slice(2), {
-  string: ['port'],
-  boolean: ['debug'],
-  alias: { p: 'port', v: 'debug' },
-  default: { port: 8080, debug: false }
-})
-
-const formatLint = filePath => ({ line, column, message }) => `${filePath}:${line}:${column}: ${message}\n`
-const lintGlob = (req, res) => {
-  const { searchParams } = new URL(req.url, `http://${req.headers.host}`)
-  if (!searchParams.has('cwd') || !searchParams.has('glob')) {
-    res.writeHead(400).end()
-    return
-  }
-
-  if (args.debug) {
-    console.log(`Request: { cwd: '${searchParams.get('cwd')}', file: '${searchParams.get('glob')}' }`)
-  }
-
-  linter.lintFiles(searchParams.get('glob'), {
-    cwd: searchParams.get('cwd'),
-    fix: false
-  }, (e, { results }) => {
-    if (e) {
-      console.error(e)
-      res.writeHead(500).end()
-      return
-    }
-    const messages = results.reduce(
-      (output, item) => [...output, ...item.messages.map(formatLint(item.filePath))],
-      []
-    )
-    messages.forEach(message => res.write(message))
-    res.end()
-  })
+// middlewares
+const logRequests = (req, res, next) => {
+  debug(`Request from '${req.url}'`)
+  next()
+}
+const authorizeRequests = (req, res, next) => {
+  req.parsedUrl = new URL(req.url, 'http://example.com')
+  if (req.headers.authorization !== token) return res.writeHead(401).end()
+  if (!hasParams(req.parsedUrl)) return res.writeHead(400).end()
+  next()
 }
 
-let { port } = args
-if (Number.isNaN(port)) port = Number(port)
-
+port = Number(port)
 polka()
-  .get('/lint', lintGlob)
+  .use(logRequests, authorizeRequests)
+  .get('/lintGlob', async (req, res) => {
+    const { searchParams } = req.parsedUrl
+    const [cwd, file] = [searchParams.get('cwd'), searchParams.get('file')]
+    try {
+      const { results } = await lintGlob(cwd, file)
+      sendLint(res, results)
+      res.end()
+    } catch (e) {
+      console.error(e)
+      res.writeHead(500).end(e.message)
+    }
+  })
+  .post('/lintText', async (req, res) => {
+    const { searchParams } = req.parsedUrl
+    const [cwd, file] = [searchParams.get('cwd'), searchParams.get('file')]
+    try {
+      const rawBody = await collectData(req)
+      const body = rawBody.toString('utf-8')
+      const { results } = await lintText(body, cwd, file)
+      sendLint(res, results)
+      res.end()
+    } catch (e) {
+      console.error(e)
+      res.writeHead(500).end(e.message)
+    }
+  })
   .listen(port, err => {
     if (err) throw err
     console.log(`Server started at ${port}`)

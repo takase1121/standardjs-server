@@ -4,16 +4,17 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "node src/main",
+    "lint": "standard src/*.js"
   },
   "bin": {
     "standardjs-server": "./src/main.js"
   },
   "bugs": {
-    "url": "http://example.com"
+    "url": "https://github.com/takase1121/standardjs-server/issues"
   },
   "keywords": [],
-  "author": "",
+  "author": "takase1121",
   "license": "ISC",
   "dependencies": {
     "eslint": "^7.9.0",
@@ -27,5 +28,8 @@
     "mri": "^1.1.6",
     "polka": "^0.5.2",
     "standard-engine": "^12.1.0"
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
   }
 }
